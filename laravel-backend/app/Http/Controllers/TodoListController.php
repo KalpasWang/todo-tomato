@@ -29,7 +29,7 @@ class TodoListController extends Controller
      */
     public function show(TodoList $todoList)
     {
-        //
+        return response($todoList);
     }
 
     /**
