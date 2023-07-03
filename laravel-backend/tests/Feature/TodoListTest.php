@@ -37,7 +37,7 @@ class TodoListTest extends TestCase
         $this->assertEquals($this->list[1]->title, $response->json()[1]['title']);
     }
 
-    /**
+    /** 
      * @test
      */
     public function it_get_single_todo_list(): void
@@ -48,5 +48,19 @@ class TodoListTest extends TestCase
         $response->assertOk();
         $this->assertEquals($this->list[0]->title, $response->json()['title']);
         $this->assertEquals($this->list[0]->id, $response->json()['id']);
+    }
+
+    /**
+     * @test
+     */
+    public function it_post_new_todo_list(): void
+    {
+        $this->withoutExceptionHandling();
+        $list = TodoList::factory()->make();
+        $response = $this->postJson(route('todo-list.store', ['title' => $list->title]));
+
+        $body = $response->assertCreated()->json();
+        $this->assertEquals($list->title, $body['title']);
+        $this->assertDatabaseHas('todo_lists', ['title' => $list->title]);
     }
 }
