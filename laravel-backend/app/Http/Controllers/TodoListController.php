@@ -39,7 +39,8 @@ class TodoListController extends Controller
      */
     public function update(Request $request, TodoList $todoList)
     {
-        //
+        $todoList->update($request->all());
+        return response($todoList);
     }
 
     /**

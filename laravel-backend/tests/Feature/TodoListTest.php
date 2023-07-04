@@ -53,7 +53,7 @@ class TodoListTest extends TestCase
     /**
      * @test
      */
-    public function it_post_new_todo_list(): void
+    public function it_save_new_todo_list(): void
     {
         $this->withoutExceptionHandling();
         $list = TodoList::factory()->make();
@@ -62,5 +62,20 @@ class TodoListTest extends TestCase
         $body = $response->assertCreated()->json();
         $this->assertEquals($list->title, $body['title']);
         $this->assertDatabaseHas('todo_lists', ['title' => $list->title]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_update_todo_list(): void
+    {
+        $this->withoutExceptionHandling();
+        // 執行
+        $response = $this->patchJson(route('todo-list.update', $this->list[0]->id), ['title' => 'new title']);
+        // 驗證
+        $body = $response->assertOk()->json();
+        $list = TodoList::find($body['id']);
+        $this->assertEquals($body['title'], 'new title');
+        $this->assertDatabaseHas('todo_lists', ['id' => $list->id, 'title' => 'new title']);
     }
 }
